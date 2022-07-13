@@ -1,0 +1,54 @@
+name: Test cache-ghostscript
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+
+jobs:
+  using-apt-fast:
+    runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Update sources and install ghostscript
+        run: >
+         sudo apt-fast -y update < /dev/null > /dev/null && sudo apt-fast -y install --no-install-recommends ghostscript < /dev/null > /dev/null
+
+         gsicclink=/usr/share/ghostscript/$(gs --version)/iccprofiles
+
+         if readlink -e "$gsicclink"; then
+            echo $gsicclink is a symlink
+         else
+            echo $gsicclink is not a symlink
+         fi
+
+  cache-apt-pkgs:
+    runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Update sources and install ghostscript
+        uses: awalsh128/cache-apt-pkgs-action@v1.0.2
+        with:
+          packages: fonts-urw-base35 libgs9-common libijs-0.35 libjbig2dec0 libopenjp2-7 libgs9 ghostscript
+          version: 1.0
+          refresh: true
+      # libgs9-common creates a symlink from /usr/share/ghostscript, but silently fails to create
+      - run: >
+         gsicclink=/usr/share/ghostscript/$(gs --version)/iccprofiles
+
+         if readlink -e "$gsicclink"; then
+            echo $gsicclink is a symlink
+         else
+            echo $gsicclink is not a symlink
+         fi
