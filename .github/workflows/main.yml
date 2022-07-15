@@ -41,7 +41,7 @@ jobs:
         uses: awalsh128/cache-apt-pkgs-action@master
         with:
           packages: fonts-urw-base35 libgs9-common libijs-0.35 libjbig2dec0 libopenjp2-7 libgs9 ghostscript
-          version: 202.0
+          version: 1.0
           refresh: true
       # libgs9-common creates a symlink from /usr/share/ghostscript, but silently fails to create
       - run: >
