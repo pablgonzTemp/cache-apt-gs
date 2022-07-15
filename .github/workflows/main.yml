@@ -38,7 +38,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: Update sources and install ghostscript
-        uses: awalsh128/cache-apt-pkgs-action@v1.0.2
+        uses: awalsh128/cache-apt-pkgs-action@master
         with:
           packages: fonts-urw-base35 libgs9-common libijs-0.35 libjbig2dec0 libopenjp2-7 libgs9 ghostscript
           version: 1.0
